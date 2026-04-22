@@ -1,0 +1,257 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+/* General Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #cfe9f9, #f5faff); /* Soft blue & white gradient */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    color: #222;
+}
+
+/* Main Container - Login Page Styling */
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 360px;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
+    background-color: #f0f4ff; /* light tinted white */
+    padding: 25px;
+    text-align: center;
+}
+
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    background-color: #1565c0;
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+    border-radius: 10px 10px 0 0;
+}
+
+/* Logo and Title */
+.logo-title {
+    display: flex;
+    align-items: center;
+}
+
+.bank-logo {
+    max-width: 40px;
+    max-height: 40px;
+    margin-right: 8px;
+}
+
+/* GIF Section */
+.middle-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.working-people {
+    max-width: 120px;
+    height: auto;
+    object-fit: contain;
+    animation: move 1s infinite alternate;
+}
+
+@keyframes move {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-8px); }
+}
+
+/* Form Container */
+.form-container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-box {
+    width: 100%;
+    max-width: 330px;
+    background: #fafafa;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.hidden {
+    display: none;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+}
+
+form input, select, textarea {
+    padding: 12px;
+    font-size: 14px;
+    width: 100%;
+    margin: 10px 0;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    outline: none;
+    background-color: #fff;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+form input:focus, select:focus, textarea:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+.row input, .row select {
+    width: 48%;
+}
+
+textarea {
+    resize: none;
+    height: 70px;
+}
+
+/* Buttons */
+.submit-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+}
+
+button {
+    padding: 12px;
+    font-size: 15px;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0d47a1;
+}
+
+/* Links */
+p {
+    margin-top: 8px;
+}
+
+a {
+    color: #0d47a1;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Forgot Password */
+.forgot-password {
+    display: block;
+    margin-top: 5px;
+    font-size: 14px;
+    color: #1976d2;
+    cursor: pointer;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 420px) {
+    .container {
+        max-width: 320px;
+        padding: 15px;
+    }
+
+    .form-box {
+        max-width: 310px;
+    }
+
+    .row {
+        flex-direction: column;
+    }
+
+    .row input, .row select {
+        width: 100%;
+    }
+
+    .working-people {
+        max-width: 100px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 400px;
+    }
+
+    .form-box {
+        max-width: 370px;
+    }
+}
+
+/* Popup Styles */
+.popup-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 350px;
+    background: #263238;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    display: none;
+    z-index: 1000;
+}
+
+.popup-content {
+    padding: 20px;
+}
+
+.popup-content button {
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #00bfa5;
+    color: white;
+    font-size: 1rem;
+}
+
+.popup-content button:hover {
+    opacity: 0.9;
+}

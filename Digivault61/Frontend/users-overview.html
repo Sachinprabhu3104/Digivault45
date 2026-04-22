@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Users Overview</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <div class="dashboard-container">
+    <header class="dashboard-header">
+      <h1>Users Overview</h1>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </header>
+    <button onclick="window.location.href='admindashboard.html'" class="back-btn">← Back to Dashboard</button>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Mobile No</th>
+          <th>Gender</th>
+          <th>Email</th>
+          <th>Address</th>
+        </tr>
+      </thead>
+      <tbody id="users-overview-body">
+        <!-- Data goes here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function logout() {
+      sessionStorage.clear();
+      window.location.href = "index.html";
+    }
+
+    async function fetchUsers() {
+      try {
+        const response = await fetch("http://localhost:8080/api/v1/fetchUsers");
+        const data = await response.json();
+        const tableBody = document.getElementById("users-overview-body");
+        tableBody.innerHTML = "";
+        data.forEach(user => {
+          const row = `<tr>
+            <td>${user.userId}</td>
+            <td>${user.firstName}</td>
+            <td>${user.lastName}</td>
+            <td>${user.mobileNo}</td>
+            <td>${user.gender}</td>
+            <td>${user.emailId}</td>
+            <td>${user.address}</td>
+          </tr>`;
+          tableBody.innerHTML += row;
+        });
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    }
+
+    fetchUsers();
+  </script>
+</body>
+</html>

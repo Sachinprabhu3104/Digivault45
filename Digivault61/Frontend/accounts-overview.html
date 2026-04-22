@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Accounts Overview</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <div class="dashboard-container">
+    <header class="dashboard-header">
+      <h1>Accounts Overview</h1>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </header>
+
+    <button onclick="window.location.href='admindashboard.html'" class="back-btn">← Back to Dashboard</button>
+
+    <div class="card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>User Id</th>
+            <th>Account No</th>
+            <th>Account Type</th>
+            <th>Balance</th>
+          </tr>
+        </thead>
+        <tbody id="accounts-body">
+          <!-- Data will be injected by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    function logout() {
+      sessionStorage.clear();
+      window.location.href = "index.html";
+    }
+
+    async function loadAccounts() {
+      try {
+        const response = await fetch("http://localhost:8080/api/v1/fetchAccounts");
+        const data = await response.json();
+        const tableBody = document.getElementById("accounts-body");
+        tableBody.innerHTML = "";
+
+        data.forEach(account => {
+          const row = `<tr>
+              <td>${account.id}</td>
+              <td>${account.userId}</td>
+              <td>${account.accountNo}</td>
+              <td>${account.accountType}</td>
+              <td>${account.balance}</td>
+            </tr>`;
+          tableBody.innerHTML += row;
+        });
+      } catch (error) {
+        console.error("Error fetching accounts:", error);
+      }
+    }
+
+    window.onload = loadAccounts;
+  </script>
+</body>
+</html>

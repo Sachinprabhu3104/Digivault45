@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digivault Admin Dashboard </title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+  <div class="dashboard-container">
+    <header class="dashboard-header">
+      <h1>Digivault Admin Dashboard</h1>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </header>
+
+    <div class="dashboard-content">
+      <!-- Table Navigation -->
+      <div class="card">
+        <h2>Tables Overview</h2>
+        <div class="details">
+          <button onclick="window.location.href='users-overview.html'">Users Overview</button>
+          <button onclick="window.location.href='accounts-overview.html'">Accounts Overview</button>
+          <button onclick="window.location.href='transactions-overview.html'">Transactions Overview</button>
+        </div>
+      </div>
+
+      <!-- Tables Section -->
+      <!-- Modals for Tables -->
+<div class="modal" id="users-overview-modal">
+  <div class="modal-content">
+      <span class="close" onclick="closeModal('users-overview-modal')">&times;</span>
+      <h2>Users Overview</h2>
+      <table class="data-table">
+          <thead>
+              <tr>
+                  <th>User ID</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Mobile No</th>
+                  <th>Gender</th>
+                  <th>Email</th>
+                  <th>Address</th>
+              </tr>
+          </thead>
+          <tbody id="users-overview-body">
+              <!-- Data will be populated dynamically -->
+          </tbody>
+      </table>
+  </div>
+</div>
+
+<div class="modal" id="accounts-overview-modal">
+  <div class="modal-content">
+      <span class="close" onclick="closeModal('accounts-overview-modal')">&times;</span>
+      <h2>Accounts Overview</h2>
+      <table class="data-table">
+          <thead>
+              <tr>
+                  <th>Id</th>
+                  <th>User Id</th>
+                  <th>Account No</th>
+                  <th>Account Type</th>
+                  <th>Balance</th>
+              </tr>
+          </thead>
+          <tbody id="accounts-body">
+              <!-- Data will be populated dynamically -->
+          </tbody>
+      </table>
+  </div>
+</div>
+
+<div class="modal" id="transactions-overview-modal">
+  <div class="modal-content">
+      <span class="close" onclick="closeModal('transactions-overview-modal')">&times;</span>
+      <h2>Transactions Overview</h2>
+      <table class="data-table">
+          <thead>
+              <tr>
+                  <th>ID</th>
+                  <th>Account No</th>
+                  <th>Transaction Type</th>
+                  <th>Amount</th>
+                  <th>Date</th>
+              </tr>
+          </thead>
+          <tbody id="transactions-body">
+              <!-- Data will be populated dynamically -->
+          </tbody>
+      </table>
+  </div>
+</div>
+
+
+      <!-- Account Management Section -->
+      <div class="card">
+        <h2>Account Management</h2>
+        <button onclick="openModal('change-password-modal')">Change Password</button>
+        <button onclick="openModal('unlock-user-modal')">Unlock User</button>
+        <button onclick="openModal('block-user-modal')">Block User</button>
+      </div>
+
+      <!-- Modals -->
+      <div class="modal" id="change-password-modal">
+        <div class="modal-content">
+          <span class="close" onclick="closeModal('change-password-modal')">&times;</span>
+          <h2>Change Password</h2>
+          <form onsubmit="handleChangePassword(event)">
+            <label for="change-user-id">User ID:</label>
+            <input type="text" id="change-user-id" required>
+            <label for="new-password">New Password:</label>
+            <input type="password" id="new-password" required>
+            <button type="submit">Submit</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="modal" id="unlock-user-modal">
+        <div class="modal-content">
+          <span class="close" onclick="closeModal('unlock-user-modal')">&times;</span>
+          <h2>Unlock User</h2>
+          <form onsubmit="handleUnlockUser(event)">
+            <label for="unlock-user-id">User ID:</label>
+            <input type="text" id="unlock-user-id" required>
+            <button type="submit">Submit</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="modal" id="block-user-modal">
+        <div class="modal-content">
+          <span class="close" onclick="closeModal('block-user-modal')">&times;</span>
+          <h2>Block User</h2>
+          <form onsubmit="handleBlockUser(event)">
+            <label for="block-user-id">User ID:</label>
+            <input type="text" id="block-user-id" required>
+            <button type="submit">Submit</button>
+          </form>
+        </div>
+      </div>
+    
+
+      <!-- Customer Support Section -->
+<div class="card" style="max-width: 600px; margin: auto; padding: 1rem;">
+  <h2>Customer Support</h2>
+  <form id="support-form">
+    <label for="support-user-id">User ID:</label>
+    <input type="text" id="support-user-id" required style="width: 100%; margin-bottom: 0.5rem;">
+
+    <label for="support-query">Query:</label>
+    <textarea id="support-query" required style="width: 100%; margin-bottom: 0.5rem;"></textarea>
+
+    <button type="submit" style="width: 100%;">Submit Query</button>
+  </form>
+  <div id="support-response" style="margin-top: 1rem; color: green;"></div>
+</div>
+
+<script>
+  document.getElementById("support-form").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const userId = document.getElementById("support-user-id").value;
+    const query = document.getElementById("support-query").value;
+
+    const response = await fetch("http://localhost:8080/api/v1/submitCustomersupport", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ userId, query })
+    });
+
+    if (response.ok) {
+      document.getElementById("support-response").textContent = "Query submitted successfully.";
+      event.target.reset();
+    } else {
+      document.getElementById("support-response").textContent = "Error submitting query.";
+    }
+  });
+</script>
+
+
+  <script>
+    function logout() {
+      sessionStorage.clear();
+      window.location.href = "index.html";
+    }
+
+    function showTable(tableId) {
+      document.querySelectorAll('.data-table').forEach(table => table.style.display = 'none');
+      document.getElementById(tableId).style.display = 'table';
+    }
+
+    function openModal(modalId) {
+    document.getElementById(modalId).style.display = 'flex';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+// Fetch Users and Show in Modal
+async function fetchUsers() {
+    try {
+        const response = await fetch("http://localhost:8080/api/v1/fetchUsers");
+        const data = await response.json();
+        const tableBody = document.getElementById("users-overview-body");
+        tableBody.innerHTML = "";
+
+        data.forEach(user => {
+            const row = `<tr>
+                <td>${user.userId}</td>
+                <td>${user.firstName}</td>
+                <td>${user.lastName}</td>
+                <td>${user.mobileNo}</td>
+                <td>${user.gender}</td>
+                <td>${user.emailId}</td>
+                <td>${user.address}</td>
+            </tr>`;
+            tableBody.innerHTML += row;
+        });
+
+        openModal('users-overview-modal');
+    } catch (error) {
+        console.error("Error fetching users:", error);
+    }
+}
+
+// Fetch Accounts and Show in Modal
+async function fetchAccounts() {
+    try {
+        const response = await fetch("http://localhost:8080/api/v1/fetchAccounts");
+        const data = await response.json();
+        const tableBody = document.getElementById("accounts-body");
+        tableBody.innerHTML = "";
+
+        data.forEach(account => {
+            const row = `<tr>
+                <td>${account.id}</td>
+                <td>${account.userId}</td>
+                <td>${account.accountNo}</td>
+                <td>${account.accountType}</td>
+                <td>${account.balance}</td>
+            </tr>`;
+            tableBody.innerHTML += row;
+        });
+
+        openModal('accounts-overview-modal');
+    } catch (error) {
+        console.error("Error fetching accounts:", error);
+    }
+}
+
+// Fetch Transactions and Show in Modal
+async function fetchData() {
+    try {
+        const response = await fetch("http://localhost:8080/api/v1/fetchTransactions");
+        const data = await response.json();
+        const tableBody = document.getElementById("transactions-body");
+        tableBody.innerHTML = "";
+
+        data.forEach(transaction => {
+            const row = `<tr>
+                <td>${transaction.id}</td>
+                <td>${transaction.accountNo}</td>
+                <td>${transaction.transactionType}</td>
+                <td>${transaction.amount}</td>
+                <td>${transaction.transactionDate}</td>
+            </tr>`;
+            tableBody.innerHTML += row;
+        });
+
+        openModal('transactions-overview-modal');
+    } catch (error) {
+        console.error("Error fetching transactions:", error);
+    }
+}
+
+
+    function handleChangePassword(event) {
+      event.preventDefault();
+      alert("Password successfully changed.");
+      closeModal('change-password-modal');
+    }
+
+    function handleUnlockUser(event) {
+      event.preventDefault();
+      alert("User successfully unlocked.");
+      closeModal('unlock-user-modal');
+    }
+
+    function handleBlockUser(event) {
+      event.preventDefault();
+      alert("User successfully blocked.");
+      closeModal('block-user-modal');
+    }
+
+    function handleCustomerSupport(event) {
+      event.preventDefault();
+      alert("Response sent successfully.");
+    }
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,440 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Inter:wght@400;500;600&display=swap');
+
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: url(Customerdashboard.css) no-repeat center center fixed;
+    background-size: cover;
+    color: black;
+    line-height: 1.6;
+    transition: background 0.5s ease-in-out;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 40px; /* Increased padding for a larger header */
+    background: linear-gradient(135deg, #2980b9, #2c3e50); /* Gradient background */
+    color: white;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border-radius: 15px; /* Rounded corners for a soft look */
+}
+
+.logo-title {
+    display: flex;
+    align-items: center;
+}
+
+.bank-logo {
+    height: 60px; /* Slightly increased logo size */
+    margin-right: 20px; /* More spacing between logo and title */
+}
+
+.dashboard-title {
+    font-size: 2.2rem; /* Larger font size */
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: 1px; /* Slight letter spacing for a modern look */
+}
+
+.profile-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Added gap between profile picture and the button */
+}
+
+.profile-pic-label {
+    width: 70px; /* Increased size of the profile picture */
+    height: 70px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    border: 3px solid #fff; /* Thicker border around the profile picture */
+}
+
+.profile-pic {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+}
+
+.profile-pic-label:hover .profile-pic {
+    opacity: 0.8; /* Slightly reduced opacity on hover for better effect */
+}
+
+.upload-btn {
+    padding: 12px 28px; /* Increased padding for better button size */
+    background: linear-gradient(135deg, #16a085, #1abc9c); /* Gradient for the upload button */
+    color: white;
+    border: none;
+    font-size: 1.2rem; /* Increased font size */
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.upload-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Hover effect for button */
+}
+
+/* Sidebar */
+.left-sidebar {
+    width: 260px;
+    background: rgba(44, 62, 80, 0.85);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    left: -260px;
+    height: 100vh;
+    transition: all 0.4s ease-in-out;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.4);
+    padding-top: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    z-index: 1000;
+}
+
+.left-sidebar.active {
+    left: 0;
+}
+
+.sidebar-menu {
+    padding: 25px;
+}
+
+.sidebar-menu li {
+    list-style: none;
+    margin-bottom: 18px;
+}
+
+.sidebar-menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    border-radius: 12px;
+    transition: all 0.3s ease-in-out;
+    font-weight: 500;
+    position: relative;
+}
+
+.sidebar-menu a:hover {
+    background: rgba(26, 188, 156, 0.85);
+    transform: scale(1.05);
+    box-shadow: 0px 4px 10px rgba(26, 188, 156, 0.3);
+}
+
+.sidebar-menu a i {
+    font-size: 1.3rem;
+    margin-right: 12px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.sidebar-menu a:hover i {
+    transform: rotate(10deg) scale(1.1);
+}
+
+/* Toggle */
+.main-content {
+    margin-left: 0;
+    transition: margin-left 0.3s;
+    padding: 40px;
+}
+
+.main-content.shifted {
+    margin-left: 260px;
+}
+
+.overview-container {
+    display: flex;
+    gap: 25px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.stats-card {
+    flex: 1;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    color: black;
+    border-radius: 14px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.229);
+    transition: transform 0.3s ease-in-out;
+    text-align: center;
+    min-width: 220px;
+}
+
+.stats-card:hover {
+    transform: translateY(-8px);
+}
+
+/* Popups */
+.popup-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 350px;
+    background: rgba(44, 62, 80, 0.95);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    display: none;
+    z-index: 1000;
+}
+
+.popup-content {
+    padding: 20px;
+}
+
+.popup-content button {
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #1abc9c;
+    color: white;
+    font-size: 1rem;
+}
+
+.popup-content button:hover {
+    opacity: 0.8;
+}
+
+/* Transactions Table */
+.transactions-table {
+    margin-top: 35px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 14px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    padding: 25px;
+    backdrop-filter: blur(15px);
+    overflow-x: auto;
+}
+
+.transactions-table table {
+    width: 100%;
+    border-collapse: collapse;
+    color: black;
+}
+
+.transactions-table th, .transactions-table td {
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.transactions-table th {
+    background: #1abc9c;
+    color: black;
+    font-weight: 700;
+}
+
+.transactions-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transition: background 0.3s ease-in-out;
+}
+
+/* Bank Cards */
+.bank-card {
+    width: 320px;
+    padding: 20px;
+    color: white;
+    border-radius: 15px;
+    text-align: left;
+    margin: 15px auto;
+    background: linear-gradient(135deg, #34495e, #2c3e50);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bank-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.cvv-section {
+    margin-top: 10px;
+}
+.cvv-section input {
+    width: 60px;
+    padding: 5px;
+    font-weight: bold;
+}
+.cvv-section .eye-icon {
+    margin-left: 5px;
+    cursor: pointer;
+    font-size: 20px; /* Adjust size as needed */
+    transition: color 0.3s ease; /* Smooth hover effect */
+}
+
+.cvv-section .eye-icon:hover {
+    color: #007BFF; /* Color change on hover */
+}
+
+
+/* Buttons */
+button {
+    padding: 14px 26px;
+    background: linear-gradient(135deg, #1abc9c, #16a085);
+    border: none;
+    color: white;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    font-size: 1.1rem;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+/* Logout Popup */
+.logout-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(44, 62, 80, 0.95);
+    padding: 25px;
+    width: 350px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease-in-out;
+}
+
+.logout-popup.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.logout-popup h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: white;
+}
+
+.logout-popup .popup-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.logout-popup button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #e74c3c;
+    color: white;
+    font-size: 1.1rem;
+    border: none;
+}
+
+.logout-popup button:hover {
+    background: #c0392b;
+}
+body.dark-mode {
+    background: #121212;
+    color: #f5f5f5;
+}
+
+/* Header */
+body.dark-mode .admin-header {
+    background: linear-gradient(135deg, #1f1f1f, #2b2b2b);
+    color: white;
+}
+
+/* Sidebar */
+body.dark-mode .left-sidebar {
+    background: rgba(20, 20, 20, 0.95);
+}
+
+body.dark-mode .sidebar-menu a {
+    color: #f5f5f5;
+}
+
+body.dark-mode .sidebar-menu a:hover {
+    background: rgba(46, 204, 113, 0.85);
+    box-shadow: 0px 4px 10px rgba(46, 204, 113, 0.3);
+}
+
+/* Main Content Cards */
+body.dark-mode .stats-card {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+}
+
+/* Transactions Table */
+body.dark-mode .transactions-table {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .transactions-table table {
+    color: #f5f5f5;
+}
+
+body.dark-mode .transactions-table th {
+    background: #2ecc71;
+    color: #1e1e1e;
+}
+
+body.dark-mode .transactions-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Popup */
+body.dark-mode .popup-container,
+body.dark-mode .logout-popup {
+    background: rgba(30, 30, 30, 0.95);
+    color: #ffffff;
+}
+
+/* Bank Card */
+body.dark-mode .bank-card {
+    background: linear-gradient(135deg, #1e1e1e, #2b2b2b);
+    color: #ffffff;
+}
+
+/* Buttons */
+body.dark-mode button,
+body.dark-mode .upload-btn {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    color: white;
+}
+
+body.dark-mode .logout-popup button {
+    background: #e74c3c;
+}
+
+body.dark-mode .logout-popup button:hover {
+    background: #c0392b;
+}

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Payee Details - DigiVault</title>
+    <style>
+        /* Professional Fintech Theme */
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --input-bg: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-green: #22c55e;
+            --accent-blue: #3b82f6;
+            --accent-hover: #16a34a;
+            --border-color: #334155;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        .payee-container {
+            max-width: 480px;
+            width: 90%;
+            padding: 40px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            margin: 40px 0;
+        }
+
+        .go-back {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 24px;
+            display: inline-flex;
+            align-items: center;
+            transition: color 0.2s;
+        }
+
+        .go-back:hover {
+            color: var(--accent-green);
+        }
+
+        .payee-container h2 {
+            text-align: left;
+            margin-bottom: 28px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.025em;
+        }
+
+        .payee-container label {
+            display: block;
+            margin: 15px 0 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .payee-container input,
+        .payee-container select {
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 5px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--input-bg);
+            color: #fff;
+            font-size: 15px;
+            box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .payee-container input:focus,
+        .payee-container select:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        /* Styling for disabled/pre-filled fields */
+        .payee-container input:disabled {
+            background: rgba(15, 23, 42, 0.5);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+            border-style: dashed;
+        }
+
+        .payee-container button[type="submit"] {
+            background-color: var(--accent-green);
+            color: white;
+            cursor: pointer;
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            margin-top: 30px;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .payee-container button[type="submit"]:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        /* Success Popup Styling */
+        #payeeSuccessPopup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #1e293b;
+            color: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            text-align: center;
+            border: 1px solid var(--accent-green);
+            width: 320px;
+        }
+
+        #payeeSuccessPopup h3 {
+            margin-top: 10px;
+            color: var(--accent-green);
+        }
+
+        #payeeSuccessPopup button {
+            margin-top: 25px;
+            padding: 12px 24px;
+            background-color: var(--accent-green);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 9998;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="overlay"></div>
+
+    <div class="payee-container">
+        <div class="go-back" onclick="goBack()">← Back to Money Transfer</div>
+        <h2>Add Payee Details</h2>
+        <form id="payeeForm">
+
+            <label for="customerName">Your Registered Name</label>
+            <input type="text" id="customerName" name="customerName" required>
+
+            <label for="payeeAccount">Payee Account Number</label>
+            <input type="text" id="payeeAccount" name="payeeAccount" placeholder="Enter account number" required>
+
+            <label for="accountType">Account Type</label>
+            <select id="accountType" name="accountType" required>
+                <option value="">-- Select Type --</option>
+                <option value="Savings">Savings</option>
+                <option value="Current">Current</option>
+            </select>
+
+            <label for="ifsc">IFSC Code</label>
+            <input type="text" id="ifsc" name="ifsc" placeholder="e.g. SBIN0001234" required>
+
+            <label for="bankName">Bank Name</label>
+            <input type="text" id="bankName" name="bankName" placeholder="e.g. State Bank of India" required>
+
+            <button type="submit">Add Payee</button>
+        </form>
+    </div>
+
+    <div id="payeeSuccessPopup">
+        <div style="font-size: 50px;">✅</div>
+        <h3>Payee Added!</h3>
+        <p style="color: var(--text-secondary); font-size: 14px;">You can now transfer funds to this account.</p>
+        <button onclick="goBack()">Go Back</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const apiData = sessionStorage.getItem("apiData");
+            if (apiData) {
+                const dataFinal = JSON.parse(apiData);
+                // Keeping your logic for setting values
+                if(document.getElementById("customerAccount")) {
+                    document.getElementById("customerAccount").value = dataFinal[0].accountNo;
+                    document.getElementById("customerAccount").disabled = true;
+                }
+                // Only prefill if data exists
+if (dataFinal[0].customerName) {
+    document.getElementById("customerName").value = dataFinal[0].customerName;
+}
+// Make sure the input is enabled so user can type
+document.getElementById("customerName").disabled = false;
+
+            }
+        });
+
+        document.getElementById("payeeForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const apiData = sessionStorage.getItem("apiData");
+            const dataFinal = JSON.parse(apiData);
+
+            const payeeData = {
+                accountNo: dataFinal[0].accountNo,
+                customerName: document.getElementById("customerName").value,
+                payeeAccountNo: document.getElementById("payeeAccount").value,
+                accountType: document.getElementById("accountType").value,
+                ifscCode: document.getElementById("ifsc").value,
+                bankName: document.getElementById("bankName").value,
+                userId: dataFinal[0].userId
+            };
+
+            fetch("http://127.0.0.1:8080/api/v1/addPayee", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payeeData)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById("overlay").style.display = "block";
+                        document.getElementById("payeeSuccessPopup").style.display = "block";
+                    } else {
+                        alert("Failed to add payee.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+        });
+
+        function goBack() {
+            window.location.href = "money-transfer.html";
+        }
+    </script>
+</body>
+
+</html>

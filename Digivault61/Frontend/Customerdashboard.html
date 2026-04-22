@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigiVault Customer Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="Customerdashboard.css">
+    <script src="Customerdashboard.js" defer></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const apiData = sessionStorage.getItem("apiData");
+            let dataFinal = JSON.parse(apiData);
+            if (apiData) {
+                document.getElementById("accId").innerText = "Total Accounts : " + dataFinal.length;
+                document.getElementById("balTotal").innerText = "Total Balance : " + dataFinal[0].balance;
+            } else {
+                document.getElementById("accId").innerText = "No Accounts found!";
+                document.getElementById("balTotal").innerText = "Total Balance : 0";
+            }
+        });
+
+        function fetchTransactions() {
+            const apiData = sessionStorage.getItem("apiData");
+            let dataFinal = JSON.parse(apiData);
+            let accountNo = dataFinal[0].accountNo;
+            
+
+            fetch(`http://localhost:8080/api/v1/transactions/${accountNo}`, {
+                method: 'GET',
+                mode: 'cors',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById("custransactions-body");
+                    tableBody.innerHTML = "";
+
+                    data.forEach(transaction => {
+                        const row = `<tr>
+                            <td>${transaction.id}</td>
+                            <td>${transaction.accountNo}</td>
+                            <td>${transaction.transactionType}</td>
+                            <td>${transaction.amount}</td>
+                            <td>${transaction.transactionDate}</td>
+                        </tr>`;
+                        tableBody.innerHTML += row;
+                    });
+                })
+                .catch(error => console.error("Error fetching transactions:", error));
+        }
+
+        
+       
+        window.onload = fetchTransactions;
+    </script>
+    <script>
+function fetchAccName(){
+            const apiData = sessionStorage.getItem("apiData"); 
+            let dataFinal = JSON.parse(apiData);
+            console.log(dataFinal);
+            const tableBody = document.getElementById("accovr-body");
+                    tableBody.innerHTML = "";
+
+                    dataFinal.forEach(data => {
+                        const row = `<tr>
+                            <td>${data.userId}</td>
+                            <td>${data.accountNo}</td>
+                            <td>${data.accountType}</td>
+                        </tr>`;
+                        tableBody.innerHTML += row;
+                    });
+        }
+        window.onload =fetchAccName;
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="hamburger-menu" id="hamburger">
+                <i class="fas fa-bars" id="openIcon"></i>
+            </div>
+            <div class="logo-title">
+                <img src="bank-logo.png" alt="Bank Logo" class="bank-logo">
+                <h1 class="dashboard-title">DigiVault</h1>
+            </div>
+            <div class="profile-menu">
+                <div class="profile-container">
+                    <label for="profile-pic-upload" class="profile-pic-label">
+                        <img id="profile-pic-img" class="profile-pic" src="default-profile.jpg" alt="Profile Picture">
+                    </label>
+                    <input type="file" id="profile-pic-upload" accept="image/*" hidden>
+                    <button onclick="uploadPhoto()">Upload</button>
+                    <script>
+                        
+                    </script>
+                </div>
+            </div>
+            <script>
+                async function uploadPhoto() {
+                    const apiData = sessionStorage.getItem("apiData");
+                    let dataFinal = JSON.parse(apiData);
+                    console.log(dataFinal);
+                    let userId = dataFinal[0].userId;
+                    const file = document.getElementById("profile-pic-upload").files[0];
+                    console.log(file)
+                    const reader = new FileReader();
+
+                    reader.onload = async function () {
+                        const base64 = reader.result.split(',')[1]; // Remove data:image/jpeg;base64,...
+                        console.log(base64);
+                        // Send to backend
+                        const res = await fetch("http://localhost:8080/api/v1/profile/upload", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                userId: userId, // 👈 replace with actual user ID
+                                profilePicture: base64
+                            })
+                        });
+                        const msg = await res.text();
+                alert(msg);
+
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+            </script>
+            <script>
+                window.addEventListener("DOMContentLoaded", fetchProfilePic);
+
+async function fetchProfilePic() {
+    const apiData = sessionStorage.getItem("apiData");
+    if (!apiData) return;
+
+    const dataFinal = JSON.parse(apiData);
+    const userId = dataFinal[0].userId;
+
+    try {
+        const res = await fetch(`http://localhost:8080/api/v1/profile/${userId}`);
+        if (!res.ok) throw new Error("Failed to fetch profile picture");
+
+        const base64 = await res.text();
+        const imgElement = document.getElementById("profile-pic-img");
+
+        // Set the base64 image as src
+        imgElement.src = `data:image/jpeg;base64,${base64}`;
+    } catch (error) {
+        console.error("Error loading profile picture:", error);
+    }
+}
+</script>
+            
+
+            <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i></button>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="left-sidebar" id="sidebar">
+            <button id="closeSidebarBtn" class="close-btn">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <ul class="sidebar-menu">
+                <li><a href="transactions.html"><i class="fas fa-exchange-alt"></i> Transactions</a></li>
+                <li><a href="money-transfer.html"><i class="fas fa-money-check-alt"></i> Money Transfer</a></li>
+               
+                <li class="settings">
+                    <a href="javascript:void(0);" onclick="toggleSettingsMenu()">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                    <ul class="submenu" id="settings-submenu">
+                        <li>
+                            <button class="dark-mode-toggle" id="darkModeToggle">
+                                <i class="fas fa-moon"></i> Dark Mode
+                            </button>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overall Overview -->
+            <section class="overall-overview">
+                <h1>Overall Overview</h1>
+                <div class="overview-container">
+                    <div class="stats-card" id="accId">
+                        <h2 style="cursor: pointer;">Total Accounts</h2>
+                    </div>
+                    <div class="stats-card" id="balTotal">
+                        <h2 style="cursor: pointer;">Total Balance</h2>
+                    </div>
+                </div>
+            </section>
+
+                <!-- Account Summary Table -->
+                <section id="account-summary-section">
+                    <h2 class="account-summary-header">Account Summary</h2>
+                    <table class="account-summary-table">
+                        <thead>
+                            <tr>
+                                <th>Customer ID</th>
+                                <th>Account Number</th>
+                                <th>Account Type</th>
+                            </tr>
+                        </thead>
+                        <tbody id="accovr-body">
+                            <!-- Account details will load here -->
+                        </tbody>
+                    </table>
+                
+                    <style>
+                        #account-summary-section {
+    max-width: 600px; /* Reduced the width */
+    margin: 50px 20px; /* Aligned to the left with reduced margin */
+    padding: 30px; /* Reduced padding */
+    background: linear-gradient(145deg, #ffffff, #f0f0f0);
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s ease, color 0.3s ease;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.account-summary-header {
+    font-size: 1.8rem; /* Reduced font size */
+    font-weight: 700;
+    color: #1a1a1a;
+    text-align: left; /* Aligned header text to the left */
+    margin-bottom: 20px; /* Reduced margin */
+    position: relative;
+}
+
+.account-summary-header::after {
+    content: "";
+    display: block;
+    width: 40px; /* Reduced the underline width */
+    height: 2px; /* Reduced the underline height */
+    background-color: #0077cc;
+    margin: 8px auto 0;
+    border-radius: 2px;
+}
+
+.account-summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.account-summary-table thead tr {
+    background: #0077cc;
+}
+
+.account-summary-table th {
+    text-align: left;
+    padding: 12px 20px; /* Reduced padding */
+    font-size: 14px; /* Reduced font size */
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+}
+
+.account-summary-table td {
+    background-color: #ffffff;
+    color: #333333;
+    padding: 12px 20px; /* Reduced padding */
+    font-size: 14px; /* Reduced font size */
+    border-bottom: 1px solid #e6e6e6;
+    transition: background 0.3s ease;
+}
+
+.account-summary-table tr:hover td {
+    background-color: #f0faff;
+}
+
+/* Responsive Table */
+@media (max-width: 768px) {
+    .account-summary-table th, .account-summary-table td {
+        padding: 10px 16px; /* Reduced padding for mobile */
+        font-size: 12px; /* Reduced font size for mobile */
+    }
+}
+
+/* Dark Mode Styling */
+body.dark-mode #account-summary-section {
+    background: #121212;
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .account-summary-header {
+    color: #f1f1f1;
+}
+
+body.dark-mode .account-summary-header::after {
+    background-color: #66ccff;
+}
+
+body.dark-mode .account-summary-table thead tr {
+    background: #1e90ff;
+}
+
+body.dark-mode .account-summary-table th {
+    color: #ffffff;
+}
+
+body.dark-mode .account-summary-table td {
+    background-color: #1f1f1f;
+    color: #eeeeee;
+    border-color: #333;
+}
+
+body.dark-mode .account-summary-table tr:hover td {
+    background-color: #2c2c2c;
+}
+                    </style>
+                </section>
+                
+            <!-- Alert Message -->
+            <div class="alert-message" id="alertMessage" style="display: none;"></div>
+
+            <!-- My Cards Section -->
+            <section class="my-cards" id="my-cards">
+                <h2>My Cards</h2>
+                <div class="cards-container" id="cardsContainer"></div>
+                <div class="create-card-buttons">
+                    <button id="viewDebitCard">View Debit Card</button>
+                    <button id="createCreditCard">Apply for Credit Card</button>
+
+                    <!-- Modal Popup -->
+                    <div id="creditModal" style="
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+">
+                        <div style="
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        background: #ffffff;
+        padding: 30px 40px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        transition: all 0.3s ease-in-out;
+    ">
+                            <p style="
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #333;
+        ">
+                                Your application for Credit Card is in progress with <strong>DigiVault</strong>.
+                            </p>
+                            <button onclick="document.getElementById('creditModal').style.display='none'" style="
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        " onmouseover="this.style.backgroundColor='#0056b3'" onmouseout="this.style.backgroundColor='#007bff'">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <script>
+                        function showCreditCardPopup() {
+                            document.getElementById("creditModal").style.display = "block";
+                        }
+
+                        function closePopup() {
+                            document.getElementById("creditModal").style.display = "none";
+                        }
+
+
+                        document.getElementById("createCreditCard").addEventListener("click", function () {
+                            const apiData = sessionStorage.getItem("apiData");
+                            if (!apiData) {
+                                alert("User session not found!");
+                                return;
+                            }
+
+                            const dataFinal = JSON.parse(apiData);
+                            const userId = dataFinal[0].userId;
+
+                            const creditCardData = {
+                                usersId: userId,
+                                status: 'Y' // default application status
+                            };
+
+                            fetch("http://localhost:8080/api/v1/creditcard/apply", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify(creditCardData)
+                            })
+                                .then(response => {
+                                    if (response.ok) {
+                                        showCreditCardPopup();
+                                    } else {
+                                        alert("Failed to submit application.");
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error("Error:", error);
+                                });
+                        });
+                    </script>
+
+
+                </div>
+
+                <!-- Manage Card Popup -->
+                <div id="manageCardPopup" class="popup-container">
+                    <div class="popup-content">
+                        <h2 id="popupTitle">Manage Card</h2>
+                        <div class="card-details">
+                            <p><strong>Card Type:</strong> <span id="cardType">-</span></p>
+                            <p><strong>Card Number:</strong> <span id="cardNumber">XXXX-XXXX-XXXX-1234</span></p>
+                            <p><strong>Expiry Date:</strong> <span id="expiryDate">--/--</span></p>
+                            <p><strong>Linked Account:</strong> <span id="accountNumber">1234567890</span></p>
+                            <p><strong>Status:</strong> <span id="cardStatus" class="active-status">Active</span></p>
+                        </div>
+                        <button id="blockCardBtn">Block/Unblock Card</button>
+                        <button id="manageUsageBtn">Manage Card Usage</button>
+                        <button id="viewSummaryBtn">View Summary</button>
+                        <button id="closePopupBtn" class="close-btn">Close</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Transactions Popup -->
+            <div id="transactionsPopup" class="popup-container" style="display:none;">
+                <div class="popup-content">
+                    <h2>Transactions</h2>
+                    <div class="transactions-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Account Number</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="custransactions-body">
+                                <!-- Transactions will load here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <button onclick="closeTransactionsPopup()">Close</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Logout Confirmation Popup -->
+    <div id="logoutPopup" class="logout-popup">
+        <div class="popup-content">
+            <h3>Are you sure you want to logout?</h3>
+            <div class="popup-buttons">
+                <button id="confirmLogout">Continue</button>
+                <button id="cancelLogout">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Chatbot -->
+    <button id="chat-toggle-btn" onclick="toggleChatbot()">Chat with Us</button>
+    <div id="chatbot-box" class="chatbot-container">
+        <div class="chatbot-header"><span>🤖 DigiVault Chatbot</span></div>
+        <div id="chat-body" class="chatbot-messages"></div>
+        <div class="chatbot-footer">
+            <input type="text" id="user-input" placeholder="Type a message..." onkeypress="handleChatInput(event)">
+            <button id="send-btn">➤</button>
+        </div>
+    </div>
+
+    <script src="chatbot.js"></script>
+    <link rel="stylesheet" href="chatbot.css">
+
+    <script>
+        function toggleSettingsMenu() {
+            var submenu = document.getElementById("settings-submenu");
+            submenu.style.display = submenu.style.display === "block" ? "none" : "block";
+        }
+
+        function openTransactionsPopup() {
+            document.getElementById("transactionsPopup").style.display = "block";
+            fetchTransactions();
+        }
+
+        function closeTransactionsPopup() {
+            document.getElementById("transactionsPopup").style.display = "none";
+        }
+        // function summaryPopup(){
+        //     const apiData = sessionStorage.getItem("apiData");
+        //     let dataFinal = JSON.parse(apiData);
+        //     console.log(dataFinal);
+        //     const tableBody = document.getElementById("popup-content");
+        //     tableBody.innerHTML = ` `;
+
+        //     document.getElementById("popup-content").style.display="block";
+        // }ha 
+      
+    </script>
+
+    <style>
+        .popup-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 800px;
+            background: #1e1e1e;
+            /* Dark background */
+            color: #f0f0f0;
+            /* Light text */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+        }
+
+        .transactions-table {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .transactions-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #2b2b2b;
+            /* Slightly lighter for contrast */
+        }
+
+        .transactions-table th,
+        .transactions-table td {
+            padding: 10px;
+            border: 1px solid #444;
+            /* Darker border */
+            text-align: center;
+            color: #e0e0e0;
+        }
+
+        .transactions-table th {
+            background-color: #333;
+            /* Header background */
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .transactions-table tr:nth-child(even) {
+            background-color: #252525;
+            /* Zebra striping for rows */
+        }
+
+        .transactions-table tr:hover {
+            background-color: #3a3a3a;
+            /* Hover effect */
+        }
+    </style>
+    <script>
+        const darkModeToggle = document.getElementById('darkModeToggle');
+    
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            
+            // Toggle icon and text (optional)
+            const icon = darkModeToggle.querySelector('i');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
+            }
+        });
+    </script>
+    
+</body>
+
+</html>

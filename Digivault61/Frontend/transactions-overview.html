@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Transactions Overview</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <div class="dashboard-container">
+    <header class="dashboard-header">
+      <h1>Transactions Overview</h1>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </header>
+
+    <button onclick="window.location.href='admindashboard.html'" class="back-btn">← Back to Dashboard</button>
+
+    <div class="card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Account No</th>
+            <th>Transaction Type</th>
+            <th>Amount</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="transactions-body">
+          <!-- Data will be injected by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    function logout() {
+      sessionStorage.clear();
+      window.location.href = "index.html";
+    }
+
+    async function loadTransactions() {
+      try {
+        const response = await fetch("http://localhost:8080/api/v1/fetchTransactions");
+        const data = await response.json();
+        const tableBody = document.getElementById("transactions-body");
+        tableBody.innerHTML = "";
+
+        data.forEach(transaction => {
+          const row = `<tr>
+              <td>${transaction.id}</td>
+              <td>${transaction.accountNo}</td>
+              <td>${transaction.transactionType}</td>
+              <td>${transaction.amount}</td>
+              <td>${transaction.transactionDate}</td>
+            </tr>`;
+          tableBody.innerHTML += row;
+        });
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+      }
+    }
+
+    window.onload = loadTransactions;
+  </script>
+</body>
+</html>
