@@ -21,8 +21,6 @@ public class BankingController {
     private final UsersService usersService;
     private final BalanceService balanceService;
 
-
-    // private final CardsService cardsService;
     public BankingController(
             AccountService accountService,
             CustomerService customerService,
@@ -102,12 +100,10 @@ public class BankingController {
     }
 
     @PostMapping("/submitCustomersupport")
-public ResponseEntity<String> submitCustomerSupport(@RequestBody Customersupport support) {
+    public ResponseEntity<String> submitCustomerSupport(@RequestBody Customersupport support) {
     customerService.saveSupportRequest(support); // You handle saving it to DB
     return ResponseEntity.ok("Support request received");
 }
-
-
     // Fetch Transactions
     @GetMapping("/fetchTransactions")
     public ResponseEntity<List<Transactions>> fetchTransactions() {
@@ -175,7 +171,6 @@ public ResponseEntity<String> submitCustomerSupport(@RequestBody Customersupport
             return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("User ID and new password must be provided");
         }
 
-        // Call service to change the password
         boolean result = usersService.changePassword(request.getUserId(), request.getNewPassword());
 
         if (result) {

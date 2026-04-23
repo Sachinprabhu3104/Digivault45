@@ -217,111 +217,6 @@ async function fetchProfilePic() {
                             <!-- Account details will load here -->
                         </tbody>
                     </table>
-                
-                    <style>
-                        #account-summary-section {
-    max-width: 600px; /* Reduced the width */
-    margin: 50px 20px; /* Aligned to the left with reduced margin */
-    padding: 30px; /* Reduced padding */
-    background: linear-gradient(145deg, #ffffff, #f0f0f0);
-    border-radius: 20px;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-    transition: background 0.3s ease, color 0.3s ease;
-    font-family: 'Segoe UI', sans-serif;
-}
-
-.account-summary-header {
-    font-size: 1.8rem; /* Reduced font size */
-    font-weight: 700;
-    color: #1a1a1a;
-    text-align: left; /* Aligned header text to the left */
-    margin-bottom: 20px; /* Reduced margin */
-    position: relative;
-}
-
-.account-summary-header::after {
-    content: "";
-    display: block;
-    width: 40px; /* Reduced the underline width */
-    height: 2px; /* Reduced the underline height */
-    background-color: #0077cc;
-    margin: 8px auto 0;
-    border-radius: 2px;
-}
-
-.account-summary-table {
-    width: 100%;
-    border-collapse: collapse;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.account-summary-table thead tr {
-    background: #0077cc;
-}
-
-.account-summary-table th {
-    text-align: left;
-    padding: 12px 20px; /* Reduced padding */
-    font-size: 14px; /* Reduced font size */
-    font-weight: 600;
-    color: #ffffff;
-    letter-spacing: 0.5px;
-}
-
-.account-summary-table td {
-    background-color: #ffffff;
-    color: #333333;
-    padding: 12px 20px; /* Reduced padding */
-    font-size: 14px; /* Reduced font size */
-    border-bottom: 1px solid #e6e6e6;
-    transition: background 0.3s ease;
-}
-
-.account-summary-table tr:hover td {
-    background-color: #f0faff;
-}
-
-/* Responsive Table */
-@media (max-width: 768px) {
-    .account-summary-table th, .account-summary-table td {
-        padding: 10px 16px; /* Reduced padding for mobile */
-        font-size: 12px; /* Reduced font size for mobile */
-    }
-}
-
-/* Dark Mode Styling */
-body.dark-mode #account-summary-section {
-    background: #121212;
-    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.05);
-}
-
-body.dark-mode .account-summary-header {
-    color: #f1f1f1;
-}
-
-body.dark-mode .account-summary-header::after {
-    background-color: #66ccff;
-}
-
-body.dark-mode .account-summary-table thead tr {
-    background: #1e90ff;
-}
-
-body.dark-mode .account-summary-table th {
-    color: #ffffff;
-}
-
-body.dark-mode .account-summary-table td {
-    background-color: #1f1f1f;
-    color: #eeeeee;
-    border-color: #333;
-}
-
-body.dark-mode .account-summary-table tr:hover td {
-    background-color: #2c2c2c;
-}
-                    </style>
                 </section>
                 
             <!-- Alert Message -->
@@ -513,15 +408,6 @@ body.dark-mode .account-summary-table tr:hover td {
         function closeTransactionsPopup() {
             document.getElementById("transactionsPopup").style.display = "none";
         }
-        // function summaryPopup(){
-        //     const apiData = sessionStorage.getItem("apiData");
-        //     let dataFinal = JSON.parse(apiData);
-        //     console.log(dataFinal);
-        //     const tableBody = document.getElementById("popup-content");
-        //     tableBody.innerHTML = ` `;
-
-        //     document.getElementById("popup-content").style.display="block";
-        // }ha 
       
     </script>
 
@@ -573,7 +459,6 @@ body.dark-mode .account-summary-table tr:hover td {
 
         .transactions-table tr:nth-child(even) {
             background-color: #252525;
-            /* Zebra striping for rows */
         }
 
         .transactions-table tr:hover {

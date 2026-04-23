@@ -112,9 +112,22 @@
     </div>
 
     <script>
-        function goBack() {
-            window.location.href = "Customerdashboard.html";
-        }
+            function goBack() {
+                window.location.href = "Customerdashboard.html";
+            }
+
+            function formatDate(dateArray) {
+        if (!dateArray) return "N/A";
+
+        let year = dateArray[0];
+        let month = String(dateArray[1]).padStart(2, '0');
+        let day = String(dateArray[2]).padStart(2, '0');
+        let hour = String(dateArray[3]).padStart(2, '0');
+        let minute = String(dateArray[4]).padStart(2, '0');
+        let second = String(dateArray[5]).padStart(2, '0');
+
+        return `${day}-${month}-${year} ${hour}:${minute}:${second}`;
+    }
 
         function fetchTransactions() {
             const apiData = sessionStorage.getItem("apiData");
@@ -146,7 +159,7 @@
                             <td>${transaction.accountNo}</td>
                             <td>${transaction.transactionType}</td>
                             <td>₹${transaction.amount}</td>
-                            <td>${transaction.transactionDate}</td>
+                            <td>${formatDate(transaction.transactionDate)}</td>
                         </tr>`;
                         tableBody.innerHTML += row;
                     });
